@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Shader.hpp"
 #include "Window.hpp"
 
 constexpr int W = 1280;
@@ -20,42 +21,18 @@ int main() {
     unsigned vbo;
     glGenBuffers(1, &vbo);
 
-    const char* vertexData = R"(
-        #version 330 core
-        layout (location=0) in vec3 aPos;
-
-        void main() {
-            gl_Position = vec4(aPos, 1.0f);
-        }
-    )";
-    unsigned vertShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertShader, 1, &vertexData, NULL);
-    glCompileShader(vertShader);
-    // Check for errors
-
-    const char* fragmentData = R"(
-        #version 330 core
-        out vec4 FragColor;
-
-        void main() {
-            FragColor = vec4(0.8f, 0.1f, 0.3f, 1.0f);
-        }
-    )";
-    unsigned fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragShader, 1, &fragmentData, NULL);
-    glCompileShader(fragShader);
-    // Check for errors
+    pge::Shader vertShader{"shaders/basic.vert", GL_VERTEX_SHADER};
+    pge::Shader fragShader{"shaders/basic.frag", GL_FRAGMENT_SHADER};
 
     unsigned shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertShader);
-    glAttachShader(shaderProgram, fragShader);
+    glAttachShader(shaderProgram, vertShader.GetId());
+    glAttachShader(shaderProgram, fragShader.GetId());
     glLinkProgram(shaderProgram);
     // Check for errors
-
     glUseProgram(shaderProgram);
 
-    glDeleteShader(vertShader);
-    glDeleteShader(fragShader);
+    vertShader.Delete();
+    fragShader.Delete();
 
     // Bound to our VBO because we previously bound it
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
