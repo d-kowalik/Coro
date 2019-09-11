@@ -12,6 +12,12 @@ constexpr char TITLE[] = "Pixel Game Engine";
 void processInput(const Window& window) {
     if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
         window.Close();
+    } else if (window.IsKeyPressed(GLFW_KEY_1)) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    } else if (window.IsKeyPressed(GLFW_KEY_2)) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    } else if (window.IsKeyPressed(GLFW_KEY_3)) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
     }
 }
 
