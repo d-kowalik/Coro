@@ -24,6 +24,9 @@ class Window {
     bool ShouldClose();
     void Clear();
     void Update();
+    void Close() const;
+
+    bool IsKeyPressed(int key) const;  // temporary
 
     friend void framebuffer_size_callback(GLFWwindow* window, int w, int h);
 };

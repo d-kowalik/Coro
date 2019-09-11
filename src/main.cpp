@@ -9,9 +9,10 @@ constexpr int W = 1280;
 constexpr int H = 720;
 constexpr char TITLE[] = "Pixel Game Engine";
 
-void processInput(GLFWwindow* window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+void processInput(const Window& window) {
+    if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
+        window.Close();
+    }
 }
 
 int main() {
@@ -85,6 +86,8 @@ int main() {
 
     while (!window.ShouldClose()) {
         window.Clear();
+
+        processInput(window);
 
         float timeValue = glfwGetTime();
 
