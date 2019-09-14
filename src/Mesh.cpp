@@ -1,11 +1,14 @@
 #include "Mesh.hpp"
 
 #include <glad/glad.h>
+#include <iostream>
+#include <string>
 
 namespace pge {
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices)
-    : _vertices(vertices), _indices(indices) {
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices,
+           std::vector<Texture> textures)
+    : _vertices(vertices), _indices(indices), _textures(textures) {
     Setup();
 }
 
@@ -45,9 +48,17 @@ void Mesh::Setup() {
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
-
 void Mesh::Draw(const ShaderProgram& shaderProgram) const {
     shaderProgram.Use();
+
+    int i = 0;
+    for (const auto& tex : _textures) {
+        std::string name{"texture" + std::to_string(i)};
+        shaderProgram.SetInt(name, i);
+        glActiveTexture(GL_TEXTURE0 + i++);
+        glBindTexture(GL_TEXTURE_2D, tex.id);
+    }
+
     glBindVertexArray(_vao);
     glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

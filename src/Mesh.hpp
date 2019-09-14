@@ -20,14 +20,20 @@ struct Vertex {
     vec2 texCoords;
 };
 
+struct Texture {
+    unsigned id;
+};
+
 class Mesh {
    private:
     std::vector<Vertex> _vertices;
     std::vector<unsigned> _indices;
+    std::vector<Texture> _textures;
     unsigned _vao, _vbo, _ebo;
 
    public:
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices,
+         std::vector<Texture> textures);
     ~Mesh();
 
     void Draw(const ShaderProgram& shaderProgram) const;

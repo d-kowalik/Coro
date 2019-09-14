@@ -94,21 +94,15 @@ int main() {
 
     pge::ShaderProgram program({{"shaders/basic.vert", GL_VERTEX_SHADER},
                                 {"shaders/basic.frag", GL_FRAGMENT_SHADER}});
-    program.Use();
-    program.SetInt("texture1", 0);
-    program.SetInt("texture2", 1);
 
-    pge::Mesh texturedMesh{vertices, indices};
+    pge::Mesh texturedMesh{vertices, indices, {{texture}, {texture2}}};
 
     float lastPercent = mixPercent;
     while (!window.ShouldClose()) {
         window.Clear();
         processInput(window);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
+        program.Use();
         if (lastPercent != mixPercent) {
             std::cout << "Mix percent: " << mixPercent << std::endl;
             program.Use();
