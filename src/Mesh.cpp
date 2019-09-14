@@ -34,6 +34,10 @@ void Mesh::Setup() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           (void*)(sizeof(Vertex::position)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(
+        2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        (void*)(sizeof(Vertex::position) + sizeof(Vertex::color)));
+    glEnableVertexAttribArray(2);
 
     // Unbind everything, VAO will bind it later.
     // Important: UNBIND EBO AFTER UNBINDING VAO OR IT WILL SAVE UNBINDING

@@ -6,6 +6,10 @@
 
 namespace pge {
 
+struct vec2 {
+    float x, y;
+};
+
 struct vec3 {
     float x, y, z;
 };
@@ -13,6 +17,7 @@ struct vec3 {
 struct Vertex {
     vec3 position;
     vec3 color;
+    vec2 texCoords;
 };
 
 class Mesh {

@@ -29,4 +29,14 @@ void ShaderProgram::SetUniform3f(const std::string& name, float x, float y,
     glUniform3f(vertexColorLocation, x, y, z);
 }
 
+void ShaderProgram::SetInt(const std::string& name, int data) const {
+    int vertexColorLocation = glGetUniformLocation(_id, name.c_str());
+    glUniform1i(vertexColorLocation, data);
+}
+
+void ShaderProgram::SetFloat(const std::string& name, float data) const {
+    int vertexColorLocation = glGetUniformLocation(_id, name.c_str());
+    glUniform1f(vertexColorLocation, data);
+}
+
 }  // namespace pge
