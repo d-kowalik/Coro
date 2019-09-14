@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "ShaderProgram.hpp"
+#include "Texture.hpp"
 
 namespace pge {
 
@@ -18,10 +19,6 @@ struct Vertex {
     vec3 position;
     vec3 color;
     vec2 texCoords;
-};
-
-struct Texture {
-    unsigned id;
 };
 
 class Mesh {

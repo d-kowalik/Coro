@@ -56,7 +56,7 @@ void Mesh::Draw(const ShaderProgram& shaderProgram) const {
         std::string name{"texture" + std::to_string(i)};
         shaderProgram.SetInt(name, i);
         glActiveTexture(GL_TEXTURE0 + i++);
-        glBindTexture(GL_TEXTURE_2D, tex.id);
+        glBindTexture(GL_TEXTURE_2D, tex.GetId());
     }
 
     glBindVertexArray(_vao);
