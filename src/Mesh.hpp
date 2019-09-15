@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Core.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
 
@@ -25,12 +26,12 @@ class Mesh {
    private:
     std::vector<Vertex> _vertices;
     std::vector<unsigned> _indices;
-    std::vector<Texture> _textures;
+    std::vector<Ref<Texture>> _textures;
     unsigned _vao, _vbo, _ebo;
 
    public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices,
-         std::vector<Texture> textures);
+         std::vector<Ref<Texture>> textures);
     ~Mesh();
 
     void Draw(const ShaderProgram& shaderProgram) const;

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "Core.hpp"
 #include "Shader.hpp"
 
 namespace pge {
@@ -12,7 +13,7 @@ class ShaderProgram {
     unsigned _id;
 
    public:
-    ShaderProgram(const std::vector<Shader>& shaders);
+    ShaderProgram(const std::vector<Ref<Shader>>& shaders);
     void Use() const;
     void SetUniform3f(const std::string& name, float x, float y, float z) const;
     void SetInt(const std::string& name, int data) const;

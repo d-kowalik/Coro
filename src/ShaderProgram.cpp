@@ -4,10 +4,10 @@
 #include <iostream>
 
 namespace pge {
-ShaderProgram::ShaderProgram(const std::vector<Shader>& shaders) {
+ShaderProgram::ShaderProgram(const std::vector<Ref<Shader>>& shaders) {
     _id = glCreateProgram();
     for (const auto& shader : shaders) {
-        glAttachShader(_id, shader.GetId());
+        glAttachShader(_id, shader->GetId());
     }
     glLinkProgram(_id);
 

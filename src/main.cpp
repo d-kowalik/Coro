@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 
+#include "Core.hpp"
 #include "Mesh.hpp"
 #include "Shader.hpp"
 #include "ShaderProgram.hpp"
@@ -51,13 +52,19 @@ int main() {
         1, 2, 3,  // second triangle
     };
 
-    pge::ShaderProgram program({{"shaders/basic.vert", GL_VERTEX_SHADER},
-                                {"shaders/basic.frag", GL_FRAGMENT_SHADER}});
+    auto basicVert =
+        std::make_shared<pge::Shader>("shaders/basic.vert", GL_VERTEX_SHADER);
+    auto basicFrag =
+        std::make_shared<pge::Shader>("shaders/basic.frag", GL_FRAGMENT_SHADER);
 
-    pge::Mesh texturedMesh{
-        vertices,
-        indices,
-        {{"textures/container.jpg", false}, {"textures/awesomeface.png"}}};
+    pge::ShaderProgram program({basicVert, basicFrag});
+
+    auto containerTexture =
+        std::make_shared<pge::Texture>("textures/container.jpg", false);
+    auto faceTexture =
+        std::make_shared<pge::Texture>("textures/awesomeface.png");
+
+    pge::Mesh texturedMesh{vertices, indices, {containerTexture, faceTexture}};
 
     float lastPercent = mixPercent;
     while (!window.ShouldClose()) {
