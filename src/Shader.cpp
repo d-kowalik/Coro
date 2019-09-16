@@ -13,7 +13,8 @@ Shader::Shader(const std::string& path, GLenum type) : _type(type) {
         return;
     }
 
-    const char* datacstyle = data.value_or("").c_str();
+    const auto str = data.value_or("");
+    const char* datacstyle = str.c_str();
 
     _id = glCreateShader(type);
     glShaderSource(_id, 1, &datacstyle, NULL);
@@ -23,8 +24,10 @@ Shader::Shader(const std::string& path, GLenum type) : _type(type) {
     char infoLog[512];
     glGetShaderiv(_id, GL_COMPILE_STATUS, &success);
     if (!success) {
+        glGetShaderInfoLog(_id, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER COMPILATION FAILED, PATH: " << path
-                  << std::endl;
+                  << std::endl
+                  << "INFO::" << infoLog << std::endl;
     }
 }
 

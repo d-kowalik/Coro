@@ -1,6 +1,7 @@
 #include "ShaderProgram.hpp"
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 namespace pge {
@@ -37,6 +38,12 @@ void ShaderProgram::SetInt(const std::string& name, int data) const {
 void ShaderProgram::SetFloat(const std::string& name, float data) const {
     int vertexColorLocation = glGetUniformLocation(_id, name.c_str());
     glUniform1f(vertexColorLocation, data);
+}
+
+void ShaderProgram::SetMat4(const std::string& name,
+                            const glm::mat4& data) const {
+    int vertexColorLocation = glGetUniformLocation(_id, name.c_str());
+    glUniformMatrix4fv(vertexColorLocation, 1, GL_FALSE, glm::value_ptr(data));
 }
 
 }  // namespace pge

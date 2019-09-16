@@ -51,6 +51,7 @@ bool Window::InitializeOpenGL() {
     }
 
     glViewport(0, 0, _width, _height);
+    glEnable(GL_DEPTH_TEST);
     return true;
 }
 
@@ -64,7 +65,7 @@ bool Window::ShouldClose() { return glfwWindowShouldClose(_window); }
 
 void Window::Clear() {
     glClearColor(0.3f, 0.3f, 0.9f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::Update() {
