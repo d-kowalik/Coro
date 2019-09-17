@@ -41,6 +41,7 @@ bool Window::CreateWindow() {
     glfwMakeContextCurrent(_window);
     glfwSetWindowUserPointer(_window, this);
     glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(_window, mouse_callback);
 
     return true;
 }
@@ -76,6 +77,8 @@ void Window::Update() {
 
 void Window::Close() const { glfwSetWindowShouldClose(_window, true); }
 
+glm::vec2 Window::GetMousePos() const { return _mousePos; }
+
 bool Window::IsKeyPressed(int key) const {
     return glfwGetKey(_window, key) == GLFW_PRESS;
 }
@@ -83,6 +86,12 @@ bool Window::IsKeyPressed(int key) const {
 void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
     Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
     win->Resize(w, h);
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    win->_mousePos.x = xpos;
+    win->_mousePos.y = ypos;
 }
 
 void error_callback(int error, const char* description) {

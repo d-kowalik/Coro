@@ -3,6 +3,7 @@
 #include <string>
 
 #include <glad/glad.h>
+#include <glm/vec2.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -11,6 +12,7 @@ class Window {
     GLFWwindow* _window;
     int _width, _height;
     std::string _title;
+    glm::vec2 _mousePos;
 
     bool InitializeGLFW();
     bool CreateWindow();
@@ -28,5 +30,8 @@ class Window {
 
     bool IsKeyPressed(int key) const;  // temporary
 
+    glm::vec2 GetMousePos() const;
+
     friend void framebuffer_size_callback(GLFWwindow* window, int w, int h);
+    friend void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 };
