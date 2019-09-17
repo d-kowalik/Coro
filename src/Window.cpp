@@ -92,6 +92,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
     win->_mousePos.x = xpos;
     win->_mousePos.y = ypos;
+    win->OnMouseMove(xpos, ypos);
 }
 
 void error_callback(int error, const char* description) {

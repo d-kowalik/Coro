@@ -56,6 +56,12 @@ void processInput(const Window& window, float delta) {
 int main() {
     Window window{W, H, TITLE};
 
+    auto fun = [](double x, double y) {
+        std::cout << "Move move!" << std::endl;
+    };
+
+    window.OnMouseMove += fun;
+
     std::vector<unsigned> indices{};
     indices.reserve(36);
 

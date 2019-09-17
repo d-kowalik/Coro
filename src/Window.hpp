@@ -7,6 +7,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include "Callback.hpp"
+
 class Window {
    private:
     GLFWwindow* _window;
@@ -14,6 +16,10 @@ class Window {
     std::string _title;
     glm::vec2 _mousePos;
 
+   public:
+    pge::Callback<double, double> OnMouseMove;
+
+   private:
     bool InitializeGLFW();
     bool CreateWindow();
     bool InitializeOpenGL();
