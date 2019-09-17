@@ -35,6 +35,7 @@ class Window {
     void Close() const;
 
     bool IsKeyPressed(int key) const;  // temporary
+    bool IsMouseButtonPressed(int button) const;
 
     glm::vec2 GetMousePos() const;
 

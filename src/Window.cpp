@@ -83,6 +83,10 @@ bool Window::IsKeyPressed(int key) const {
     return glfwGetKey(_window, key) == GLFW_PRESS;
 }
 
+bool Window::IsMouseButtonPressed(int button) const {
+    return glfwGetMouseButton(_window, button) == GLFW_PRESS;
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
     Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
     win->Resize(w, h);

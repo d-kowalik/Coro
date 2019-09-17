@@ -16,10 +16,50 @@
 constexpr int W = 1280;
 constexpr int H = 720;
 constexpr char TITLE[] = "Pixel Game Engine";
+Window window{W, H, TITLE};
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+float lastX = W / 2;
+float lastY = H / 2;
+float yaw = -90.f;
+float pitch = 0.f;
+
+void MoveCamera(double xpos, double ypos) {
+    static bool firstMouse = false;
+    if (!window.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
+        firstMouse = true;
+        return;
+    }
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.05;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    if (pitch > 89.0f) pitch = 89.0f;
+    if (pitch < -89.0f) pitch = -89.0f;
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(front);
+};
 
 float mixPercent = 0.2f;
 void processInput(const Window& window, float delta) {
@@ -54,13 +94,7 @@ void processInput(const Window& window, float delta) {
 }
 #include "cubevertices.hpp"
 int main() {
-    Window window{W, H, TITLE};
-
-    auto fun = [](double x, double y) {
-        std::cout << "Move move!" << std::endl;
-    };
-
-    window.OnMouseMove += fun;
+    window.OnMouseMove += MoveCamera;
 
     std::vector<unsigned> indices{};
     indices.reserve(36);
@@ -111,10 +145,6 @@ int main() {
     float lastPercent = mixPercent;
     float delta = 0.f;
     float last = 0.f;
-    float lastX = W / 2;
-    float lastY = H / 2;
-    float yaw = -90.f;
-    float pitch = 0.f;
     while (!window.ShouldClose()) {
         float current = glfwGetTime();
         delta = current - last;
@@ -122,37 +152,6 @@ int main() {
 
         window.Clear();
         processInput(window, delta);
-
-        auto mpos = window.GetMousePos();
-        float xpos = mpos.x;
-        float ypos = mpos.y;
-        static bool firstMouse = false;
-        if (firstMouse) {
-            lastX = xpos;
-            lastY = ypos;
-            firstMouse = false;
-        }
-
-        float xoffset = xpos - lastX;
-        float yoffset = lastY - ypos;
-        lastX = xpos;
-        lastY = ypos;
-
-        float sensitivity = 0.05;
-        xoffset *= sensitivity;
-        yoffset *= sensitivity;
-
-        yaw += xoffset;
-        pitch += yoffset;
-
-        if (pitch > 89.0f) pitch = 89.0f;
-        if (pitch < -89.0f) pitch = -89.0f;
-
-        glm::vec3 front;
-        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front.y = sin(glm::radians(pitch));
-        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        cameraFront = glm::normalize(front);
 
         std::cout << glfwGetTime() << std::endl;
 
