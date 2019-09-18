@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 
+#include "Camera.hpp"
 #include "Core.hpp"
 #include "Mesh.hpp"
 #include "Shader.hpp"
@@ -17,15 +18,10 @@ constexpr int W = 1280;
 constexpr int H = 720;
 constexpr char TITLE[] = "Pixel Game Engine";
 Window window{W, H, TITLE};
-
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+Coro::Camera camera;
 
 float lastX = W / 2;
 float lastY = H / 2;
-float yaw = -90.f;
-float pitch = 0.f;
 
 void MoveCamera(double xpos, double ypos) {
     static bool firstMouse = false;
@@ -44,21 +40,7 @@ void MoveCamera(double xpos, double ypos) {
     lastX = xpos;
     lastY = ypos;
 
-    float sensitivity = 0.05;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    if (pitch > 89.0f) pitch = 89.0f;
-    if (pitch < -89.0f) pitch = -89.0f;
-
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
+    camera.ProcessMouseMove(xoffset, yoffset);
 };
 
 float mixPercent = 0.2f;
@@ -79,18 +61,6 @@ void processInput(const Window& window, float delta) {
         if (mixPercent <= 0.0f) return;
         mixPercent -= 0.001f;
     }
-    if (window.IsKeyPressed(GLFW_KEY_W)) cameraPos += cameraSpeed * cameraFront;
-    if (window.IsKeyPressed(GLFW_KEY_S)) cameraPos -= cameraSpeed * cameraFront;
-    if (window.IsKeyPressed(GLFW_KEY_A))
-        cameraPos -=
-            glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (window.IsKeyPressed(GLFW_KEY_D))
-        cameraPos +=
-            glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (window.IsKeyPressed(GLFW_KEY_LEFT_SHIFT))
-        cameraPos -= cameraSpeed * cameraUp;
-    if (window.IsKeyPressed(GLFW_KEY_SPACE))
-        cameraPos += cameraSpeed * cameraUp;
 }
 #include "cubevertices.hpp"
 int main() {
@@ -131,7 +101,7 @@ int main() {
 
     glm::mat4 model(1.0f);
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, .0f, .0f));
-    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 projection(1.0f);
     projection = glm::perspective(glm::radians(70.0f),
                                   static_cast<float>(W) / static_cast<float>(H),
@@ -156,10 +126,7 @@ int main() {
         std::cout << glfwGetTime() << std::endl;
 
         program.Use();
-        float radius = 10.0f;
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
-        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        view = camera.GetViewMatrix();
         program.SetMat4("view", view);
         if (lastPercent != mixPercent) {
             program.SetFloat("mixPercent", mixPercent);
