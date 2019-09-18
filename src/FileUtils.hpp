@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace pge::FileUtils {
+namespace Coro::FileUtils {
 
 std::optional<std::string> Read(const std::string& path) {
     std::ifstream in(path);
@@ -21,4 +21,4 @@ std::optional<std::string> Read(const std::string& path) {
     return {};
 }
 
-}  // namespace pge::FileUtils
+}  // namespace Coro::FileUtils

@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace pge {
+namespace Coro {
 
 class Texture {
    private:
@@ -14,4 +14,4 @@ class Texture {
     inline unsigned GetId() const { return _id; }
 };
 
-}  // namespace pge
+}  // namespace Coro

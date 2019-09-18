@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-namespace pge {
+namespace Coro {
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices,
            std::vector<Ref<Texture>> textures)
@@ -64,4 +64,4 @@ void Mesh::Draw(const ShaderProgram& shaderProgram) const {
     glBindVertexArray(0);
 }
 
-}  // namespace pge
+}  // namespace Coro

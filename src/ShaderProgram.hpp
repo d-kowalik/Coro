@@ -7,7 +7,7 @@
 #include "Core.hpp"
 #include "Shader.hpp"
 
-namespace pge {
+namespace Coro {
 
 class ShaderProgram {
    private:
@@ -23,4 +23,4 @@ class ShaderProgram {
     void SetMat4(const std::string& name, const glm::mat4& data) const;
 };
 
-}  // namespace pge
+}  // namespace Coro

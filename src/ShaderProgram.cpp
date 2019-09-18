@@ -4,7 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
-namespace pge {
+namespace Coro {
 ShaderProgram::ShaderProgram(const std::vector<Ref<Shader>>& shaders) {
     _id = glCreateProgram();
     for (const auto& shader : shaders) {
@@ -46,4 +46,4 @@ void ShaderProgram::SetMat4(const std::string& name,
     glUniformMatrix4fv(vertexColorLocation, 1, GL_FALSE, glm::value_ptr(data));
 }
 
-}  // namespace pge
+}  // namespace Coro

@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <stb_image/stb_image.h>
 
-namespace pge {
+namespace Coro {
 
 Texture::Texture(const std::string& path, bool rgba) {
     glGenTextures(1, &_id);
@@ -28,4 +28,4 @@ Texture::Texture(const std::string& path, bool rgba) {
     stbi_image_free(data);
 }
 
-}  // namespace pge
+}  // namespace Coro

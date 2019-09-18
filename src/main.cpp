@@ -17,7 +17,7 @@
 constexpr int W = 1280;
 constexpr int H = 720;
 constexpr char TITLE[] = "Pixel Game Engine";
-Window window{W, H, TITLE};
+Coro::Window window{W, H, TITLE};
 Coro::Camera camera;
 
 float lastX = W / 2;
@@ -44,7 +44,7 @@ void MoveCamera(double xpos, double ypos) {
 };
 
 float mixPercent = 0.2f;
-void processInput(const Window& window, float delta) {
+void processInput(const Coro::Window& window, float delta) {
     const float cameraSpeed = 2.5f * delta;  // adjust accordingly
     if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
         window.Close();
@@ -86,18 +86,18 @@ int main() {
         glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
     auto basicVert =
-        std::make_shared<pge::Shader>("shaders/basic.vert", GL_VERTEX_SHADER);
-    auto basicFrag =
-        std::make_shared<pge::Shader>("shaders/basic.frag", GL_FRAGMENT_SHADER);
+        std::make_shared<Coro::Shader>("shaders/basic.vert", GL_VERTEX_SHADER);
+    auto basicFrag = std::make_shared<Coro::Shader>("shaders/basic.frag",
+                                                    GL_FRAGMENT_SHADER);
 
-    pge::ShaderProgram program({basicVert, basicFrag});
+    Coro::ShaderProgram program({basicVert, basicFrag});
 
     auto containerTexture =
-        std::make_shared<pge::Texture>("textures/container.jpg", false);
+        std::make_shared<Coro::Texture>("textures/container.jpg", false);
     auto faceTexture =
-        std::make_shared<pge::Texture>("textures/awesomeface.png");
+        std::make_shared<Coro::Texture>("textures/awesomeface.png");
 
-    pge::Mesh texturedMesh{vertices, indices, {containerTexture, faceTexture}};
+    Coro::Mesh texturedMesh{vertices, indices, {containerTexture, faceTexture}};
 
     glm::mat4 model(1.0f);
     model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, .0f, .0f));

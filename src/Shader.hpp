@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace pge {
+namespace Coro {
 
 class Shader {
    private:
@@ -21,4 +21,4 @@ class Shader {
     void Delete();
 };
 
-}  // namespace pge
+}  // namespace Coro

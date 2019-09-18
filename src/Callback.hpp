@@ -4,7 +4,7 @@
 #include <functional>
 #include <vector>
 
-namespace pge {
+namespace Coro {
 
 template <typename... Args>
 class Callback {
@@ -42,4 +42,4 @@ class Callback {
     }
 };
 
-}  // namespace pge
+}  // namespace Coro

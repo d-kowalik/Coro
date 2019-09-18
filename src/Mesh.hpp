@@ -6,7 +6,7 @@
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
 
-namespace pge {
+namespace Coro {
 
 struct vec2 {
     float x, y;
@@ -40,4 +40,4 @@ class Mesh {
     void Setup();
 };
 
-}  // namespace pge
+}  // namespace Coro

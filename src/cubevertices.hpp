@@ -4,7 +4,7 @@
 
 #include "Mesh.hpp"
 
-std::vector<pge::Vertex> vertices{
+std::vector<Coro::Vertex> vertices{
     {{-0.5f, -0.5f, -0.5f}, {.6f, .3f, .9f}, {0.0f, 0.0f}},
     {{
          0.5f,

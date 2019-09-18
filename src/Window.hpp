@@ -9,6 +9,8 @@
 
 #include "Callback.hpp"
 
+namespace Coro {
+
 class Window {
    private:
     GLFWwindow* _window;
@@ -17,7 +19,7 @@ class Window {
     glm::vec2 _mousePos;
 
    public:
-    pge::Callback<double, double> OnMouseMove;
+    Coro::Callback<double, double> OnMouseMove;
 
    private:
     bool InitializeGLFW();
@@ -42,3 +44,5 @@ class Window {
     friend void framebuffer_size_callback(GLFWwindow* window, int w, int h);
     friend void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 };
+
+}

@@ -4,6 +4,8 @@
 
 using std::cout, std::endl;
 
+namespace Coro {
+
 void error_callback(int error, const char* description);
 
 Window::Window(int width, int height, std::string title)
@@ -102,3 +104,5 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 void error_callback(int error, const char* description) {
     cout << "GLFW Error: " << description << endl;
 }
+
+}  // namespace Coro

@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace pge {
+namespace Coro {
 
 Shader::Shader(const std::string& path, GLenum type) : _type(type) {
     const auto data = FileUtils::Read(path);
@@ -38,4 +38,4 @@ void Shader::Delete() {
     glDeleteShader(_id);
 }
 
-}  // namespace pge
+}  // namespace Coro
