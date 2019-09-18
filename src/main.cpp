@@ -16,7 +16,7 @@
 
 constexpr int W = 1280;
 constexpr int H = 720;
-constexpr char TITLE[] = "Pixel Game Engine";
+constexpr char TITLE[] = "Coro";
 Coro::Window window{W, H, TITLE};
 Coro::Camera camera;
 
