@@ -30,7 +30,6 @@ bool Window::InitializeGLFW() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwSetErrorCallback(error_callback);
     return true;
 }
 
@@ -44,6 +43,8 @@ bool Window::CreateWindow() {
     glfwSetWindowUserPointer(_window, this);
     glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
     glfwSetCursorPosCallback(_window, mouse_callback);
+    glfwSetErrorCallback(error_callback);
+    glfwSetKeyCallback(_window, key_callback);
 
     return true;
 }
@@ -64,6 +65,14 @@ void Window::Resize(int w, int h) {
     glViewport(0, 0, w, h);
 }
 
+void Window::KeyPressed(int key) { _keys[key] = true; }
+
+void Window::KeyReleased(int key) { _keys[key] = false; }
+
+void Window::ButtonPressed(int button) { _buttons[button] = true; }
+
+void Window::ButtonReleased(int button) { _buttons[button] = false; }
+
 bool Window::ShouldClose() { return glfwWindowShouldClose(_window); }
 
 void Window::Clear() {
@@ -81,13 +90,9 @@ void Window::Close() const { glfwSetWindowShouldClose(_window, true); }
 
 glm::vec2 Window::GetMousePos() const { return _mousePos; }
 
-bool Window::IsKeyPressed(int key) const {
-    return glfwGetKey(_window, key) == GLFW_PRESS;
-}
+bool Window::IsKeyPressed(int key) const { return _keys[key]; }
 
-bool Window::IsMouseButtonPressed(int button) const {
-    return glfwGetMouseButton(_window, button) == GLFW_PRESS;
-}
+bool Window::IsMouseButtonPressed(int button) const { return _buttons[button]; }
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
     Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
@@ -99,6 +104,29 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     win->_mousePos.x = xpos;
     win->_mousePos.y = ypos;
     win->OnMouseMove(xpos, ypos);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+    Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    win->OnMouseScroll(xoffset, yoffset);
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action,
+                           int mods) {
+    Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    if (action == GLFW_PRESS)
+        win->ButtonPressed(button);
+    else if (action == GLFW_RELEASE)
+        win->ButtonReleased(button);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action,
+                  int mods) {
+    Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    if (action == GLFW_PRESS)
+        win->KeyPressed(key);
+    else if (action == GLFW_RELEASE)
+        win->KeyReleased(key);
 }
 
 void error_callback(int error, const char* description) {
