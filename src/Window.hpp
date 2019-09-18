@@ -23,6 +23,7 @@ class Window {
    public:
     Coro::Callback<double, double> OnMouseMove;
     Coro::Callback<double, double> OnMouseScroll;
+    Coro::Callback<int> OnKeyPressed;
 
    private:
     bool InitializeGLFW();

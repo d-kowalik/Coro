@@ -40,7 +40,20 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "functional": "cpp",
+        "cstdarg": "cpp",
+        "ctime": "cpp",
+        "iomanip": "cpp",
+        "iterator": "cpp",
+        "list": "cpp",
+        "locale": "cpp",
+        "unordered_map": "cpp",
+        "xhash": "cpp",
+        "xlocbuf": "cpp",
+        "xlocmes": "cpp",
+        "xlocmon": "cpp",
+        "xloctime": "cpp"
     },
     "terminal.integrated.shell.windows": "cmd.exe"
 }

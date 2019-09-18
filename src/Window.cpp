@@ -45,6 +45,7 @@ bool Window::CreateWindow() {
     glfwSetCursorPosCallback(_window, mouse_callback);
     glfwSetErrorCallback(error_callback);
     glfwSetKeyCallback(_window, key_callback);
+    glfwSetMouseButtonCallback(_window, mouse_button_callback);
 
     return true;
 }
@@ -65,7 +66,10 @@ void Window::Resize(int w, int h) {
     glViewport(0, 0, w, h);
 }
 
-void Window::KeyPressed(int key) { _keys[key] = true; }
+void Window::KeyPressed(int key) {
+    OnKeyPressed(key);
+    _keys[key] = true;
+}
 
 void Window::KeyReleased(int key) { _keys[key] = false; }
 
