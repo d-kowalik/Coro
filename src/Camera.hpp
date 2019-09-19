@@ -8,9 +8,8 @@
 
 namespace Coro {
 
+class Window;
 class Camera {
-    enum class CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT };
-
     float _yaw = -90.f;  // default
     float _pitch = 0.f;  // default
     float _speed = 2.5f;
@@ -24,11 +23,15 @@ class Camera {
     glm::vec3 _worldUp = _up;
 
    public:
+    enum class CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
+
     Camera();
     Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch,
            float speed);
 
     void ProcessMouseMove(double xpos, double ypos);
+    void ProcessInput(CameraMovement direction, float delta);
+    void ProcessMouseScroll(float yoffset);
 
     glm::mat4 GetViewMatrix() const;
 

@@ -43,6 +43,10 @@ void MoveCamera(double xpos, double ypos) {
     camera.ProcessMouseMove(xoffset, yoffset);
 };
 
+void OnScroll(double xoffset, double yoffset) {
+    camera.ProcessMouseScroll(yoffset);
+}
+
 float mixPercent = 0.2f;
 void processInput(const Coro::Window& window, float delta) {
     const float cameraSpeed = 2.5f * delta;  // adjust accordingly
@@ -61,10 +65,31 @@ void processInput(const Coro::Window& window, float delta) {
         if (mixPercent <= 0.0f) return;
         mixPercent -= 0.001f;
     }
+    if (window.IsKeyPressed(GLFW_KEY_W)) {
+        camera.ProcessInput(Coro::Camera::CameraMovement::FORWARD, delta);
+    }
+    if (window.IsKeyPressed(GLFW_KEY_S)) {
+        camera.ProcessInput(Coro::Camera::CameraMovement::BACKWARD, delta);
+    }
+    if (window.IsKeyPressed(GLFW_KEY_A)) {
+        camera.ProcessInput(Coro::Camera::CameraMovement::LEFT, delta);
+    }
+    if (window.IsKeyPressed(GLFW_KEY_D)) {
+        camera.ProcessInput(Coro::Camera::CameraMovement::RIGHT, delta);
+    }
+    if (window.IsKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+        camera.ProcessInput(Coro::Camera::CameraMovement::DOWN, delta);
+    }
+    if (window.IsKeyPressed(GLFW_KEY_SPACE)) {
+        camera.ProcessInput(Coro::Camera::CameraMovement::UP, delta);
+    }
 }
+
 #include "cubevertices.hpp"
+
 int main() {
     window.OnMouseMove += MoveCamera;
+    window.OnMouseScroll += OnScroll;
 
     std::vector<unsigned> indices{};
     indices.reserve(36);
@@ -122,8 +147,6 @@ int main() {
 
         window.Clear();
         processInput(window, delta);
-
-        std::cout << glfwGetTime() << std::endl;
 
         program.Use();
         view = camera.GetViewMatrix();

@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Window.hpp"
+
 namespace Coro {
 
 Camera::Camera() { UpdateVectors(); }
@@ -23,6 +25,23 @@ void Camera::ProcessMouseMove(double xoffset, double yoffset) {
     if (_pitch < -89.0f) _pitch = -89.0f;
 
     UpdateVectors();
+}
+
+void Camera::ProcessInput(CameraMovement direction, float delta) {
+    float velocity = _speed * delta;
+    if (direction == CameraMovement::FORWARD) _pos += _front * velocity;
+    if (direction == CameraMovement::BACKWARD) _pos -= _front * velocity;
+    if (direction == CameraMovement::LEFT) _pos -= _right * velocity;
+    if (direction == CameraMovement::RIGHT) _pos += _right * velocity;
+    if (direction == CameraMovement::UP) _pos += _up * velocity;
+    if (direction == CameraMovement::DOWN) _pos -= _up * velocity;
+}
+
+void Camera::ProcessMouseScroll(float yoffset) {
+    std::cout << yoffset << std::endl;
+    if (_fov >= 1.0f && _fov <= 45.0f) _fov -= yoffset;
+    if (_fov <= 1.0f) _fov = 1.0f;
+    if (_fov >= 90.0f) _fov = 45.0f;
 }
 
 glm::mat4 Camera::GetViewMatrix() const {

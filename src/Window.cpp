@@ -46,6 +46,7 @@ bool Window::CreateWindow() {
     glfwSetErrorCallback(error_callback);
     glfwSetKeyCallback(_window, key_callback);
     glfwSetMouseButtonCallback(_window, mouse_button_callback);
+    glfwSetScrollCallback(_window, scroll_callback);
 
     return true;
 }
