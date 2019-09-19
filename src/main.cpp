@@ -103,13 +103,6 @@ int main() {
         indices.push_back(j + 3);
     }
 
-    glm::vec3 cubePositions[] = {
-        glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-        glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
-
     auto basicVert =
         std::make_shared<Coro::Shader>("shaders/basic.vert", GL_VERTEX_SHADER);
     auto basicFrag = std::make_shared<Coro::Shader>("shaders/basic.frag",
@@ -140,14 +133,17 @@ int main() {
     float lastPercent = mixPercent;
     float delta = 0.f;
     float last = 0.f;
+
     while (!window.ShouldClose()) {
         float current = glfwGetTime();
         delta = current - last;
         last = current;
 
-        window.Clear();
         processInput(window, delta);
 
+        std::cout << delta * 1000 << std::endl;
+
+        window.Clear();
         program.Use();
         view = camera.GetViewMatrix();
         program.SetMat4("view", view);
@@ -155,16 +151,11 @@ int main() {
             program.SetFloat("mixPercent", mixPercent);
             lastPercent = mixPercent;
         }
-        unsigned i = 0;
-        for (const auto& pos : cubePositions) {
-            glm::mat4 model(1.0f);
-            float angle = i++ * 20.0f;
-            model = glm::translate(model, pos);
-            model = glm::rotate(model, glm::radians(angle),
-                                glm::vec3(1.0f, .5f, .0f));
-            program.SetMat4("model", model);
-            texturedMesh.Draw(program);
-        }
+        glm::mat4 model(1.0f);
+        model =
+            glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, .0f, .0f));
+        program.SetMat4("model", model);
+        texturedMesh.Draw(program);
 
         window.Update();
     }
