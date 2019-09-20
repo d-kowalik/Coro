@@ -18,8 +18,8 @@ void Camera::ProcessMouseMove(double xoffset, double yoffset) {
     xoffset *= _sensitivity;
     yoffset *= _sensitivity;
 
-    _yaw += xoffset;
-    _pitch += yoffset;
+    _yaw += static_cast<float>(xoffset);
+    _pitch += static_cast<float>(yoffset);
 
     if (_pitch > 89.0f) _pitch = 89.0f;
     if (_pitch < -89.0f) _pitch = -89.0f;
@@ -27,8 +27,8 @@ void Camera::ProcessMouseMove(double xoffset, double yoffset) {
     UpdateVectors();
 }
 
-void Camera::ProcessInput(CameraMovement direction, float delta) {
-    float velocity = _speed * delta;
+void Camera::ProcessInput(const CameraMovement direction, const float delta) {
+    const float velocity = _speed * delta;
     if (direction == CameraMovement::FORWARD) _pos += _front * velocity;
     if (direction == CameraMovement::BACKWARD) _pos -= _front * velocity;
     if (direction == CameraMovement::LEFT) _pos -= _right * velocity;
@@ -37,7 +37,7 @@ void Camera::ProcessInput(CameraMovement direction, float delta) {
     if (direction == CameraMovement::DOWN) _pos -= _up * velocity;
 }
 
-void Camera::ProcessMouseScroll(float yoffset) {
+void Camera::ProcessMouseScroll(const float yoffset) {
     std::cout << yoffset << std::endl;
     if (_fov >= 1.0f && _fov <= 45.0f) _fov -= yoffset;
     if (_fov <= 1.0f) _fov = 1.0f;

@@ -8,18 +8,10 @@
 
 namespace Coro {
 
-struct vec2 {
-    float x, y;
-};
-
-struct vec3 {
-    float x, y, z;
-};
-
 struct Vertex {
-    vec3 position;
-    vec3 color;
-    vec2 texCoords;
+	glm::vec3 position;
+	glm::vec3 color;
+	glm::vec2 texCoords;
 };
 
 class Mesh {

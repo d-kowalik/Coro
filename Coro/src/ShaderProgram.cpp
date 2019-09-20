@@ -26,24 +26,34 @@ void ShaderProgram::Use() const { glUseProgram(_id); }
 
 void ShaderProgram::SetUniform3f(const std::string& name, float x, float y,
                                  float z) const {
-    int vertexColorLocation = glGetUniformLocation(_id, name.c_str());
-    glUniform3f(vertexColorLocation, x, y, z);
+	if (_cache.find(name) == _cache.end()) _cache[name] = glGetUniformLocation(_id, name.c_str());
+	
+    glUniform3f(_cache[name], x, y, z);
 }
 
 void ShaderProgram::SetInt(const std::string& name, int data) const {
-    int vertexColorLocation = glGetUniformLocation(_id, name.c_str());
-    glUniform1i(vertexColorLocation, data);
+	if (_cache.find(name) == _cache.end()) _cache[name] = glGetUniformLocation(_id, name.c_str());
+
+    glUniform1i(_cache[name], data);
 }
 
 void ShaderProgram::SetFloat(const std::string& name, float data) const {
-    int vertexColorLocation = glGetUniformLocation(_id, name.c_str());
-    glUniform1f(vertexColorLocation, data);
+	if (_cache.find(name) == _cache.end()) _cache[name] = glGetUniformLocation(_id, name.c_str());
+
+	glUniform1f(_cache[name], data);
 }
 
 void ShaderProgram::SetMat4(const std::string& name,
                             const glm::mat4& data) const {
-    int vertexColorLocation = glGetUniformLocation(_id, name.c_str());
-    glUniformMatrix4fv(vertexColorLocation, 1, GL_FALSE, glm::value_ptr(data));
+	if (_cache.find(name) == _cache.end()) _cache[name] = glGetUniformLocation(_id, name.c_str());
+
+	glUniformMatrix4fv(_cache[name], 1, GL_FALSE, glm::value_ptr(data));
+}
+
+void ShaderProgram::SetVec3(const std::string& name, const glm::vec3& data) const {
+	if (_cache.find(name) == _cache.end()) _cache[name] = glGetUniformLocation(_id, name.c_str());
+
+	glUniform3f(_cache[name], data.x, data.y, data.z);
 }
 
 }  // namespace Coro

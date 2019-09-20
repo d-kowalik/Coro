@@ -17,14 +17,14 @@ Shader::Shader(const std::string& path, GLenum type) : _type(type) {
     const char* datacstyle = str.c_str();
 
     _id = glCreateShader(type);
-    glShaderSource(_id, 1, &datacstyle, NULL);
+    glShaderSource(_id, 1, &datacstyle, nullptr);
     glCompileShader(_id);
 
     int success;
     char infoLog[512];
     glGetShaderiv(_id, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(_id, 512, NULL, infoLog);
+        glGetShaderInfoLog(_id, 512, nullptr, infoLog);
         std::cout << "ERROR::SHADER COMPILATION FAILED, PATH: " << path
                   << std::endl
                   << "INFO::" << infoLog << std::endl;

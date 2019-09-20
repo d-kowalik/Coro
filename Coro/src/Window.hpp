@@ -42,7 +42,7 @@ class Window {
 
     bool ShouldClose();
     void Clear();
-    void Update();
+    void Update() const;
     void Close() const;
 
     bool IsKeyPressed(int key) const;  // temporary

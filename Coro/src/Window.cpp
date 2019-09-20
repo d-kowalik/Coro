@@ -7,6 +7,14 @@ using std::cout, std::endl;
 namespace Coro {
 
 void error_callback(int error, const char* description);
+void framebuffer_size_callback(GLFWwindow* window, int w, int h);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void key_callback(GLFWwindow* window, int key, int scancode,
+	int action, int mods);
+void mouse_button_callback(GLFWwindow* window, int button,
+	int action, int mods);
+void scroll_callback(GLFWwindow* window, double xoffset,
+	double yoffset);
 
 Window::Window(int width, int height, std::string title)
     : _width(width), _height(height), _title(title) {
@@ -47,7 +55,7 @@ bool Window::CreateWindow() {
     glfwSetKeyCallback(_window, key_callback);
     glfwSetMouseButtonCallback(_window, mouse_button_callback);
     glfwSetScrollCallback(_window, scroll_callback);
-
+	
     return true;
 }
 
@@ -85,9 +93,8 @@ void Window::Clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Window::Update() {
+void Window::Update() const {
     glfwSwapBuffers(_window);
-    // process input
     glfwPollEvents();
 }
 

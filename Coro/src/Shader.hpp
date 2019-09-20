@@ -10,14 +10,14 @@ class Shader {
    private:
     unsigned _id;
     GLenum _type;
-    bool _deleted;
+    bool _deleted = false;
 
    public:
     Shader(const std::string& path, GLenum type);
     ~Shader();
 
-    const unsigned GetId() const { return _id; }
-    const bool IsDeleted() const { return _deleted; }
+    unsigned GetId() const { return _id; }
+    bool IsDeleted() const { return _deleted; }
     void Delete();
 };
 

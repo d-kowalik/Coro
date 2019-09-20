@@ -11,7 +11,7 @@ class Texture {
    public:
     Texture(const std::string& path, bool rgba = true);
 
-    inline unsigned GetId() const { return _id; }
+    unsigned GetId() const { return _id; }
 };
 
 }  // namespace Coro
