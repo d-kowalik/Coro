@@ -81,5 +81,7 @@
     <None Include="shaders\lightning.vert" />
     <None Include="shaders\lightning.frag" />
     <None Include="shaders\lightSource.frag" />
+    <None Include="shaders\flatColor.vert" />
+    <None Include="shaders\flatColor.frag" />
   </ItemGroup>
 </Project>

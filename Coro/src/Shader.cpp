@@ -33,6 +33,10 @@ Shader::Shader(const std::string& path, GLenum type) : _type(type) {
 
 Shader::~Shader() { Delete(); }
 
+Ref<Shader> Shader::Make(const std::string& path, GLenum type) {
+	return MakeRef<Shader>(path, type);
+}
+
 void Shader::Delete() {
     _deleted = true;
     glDeleteShader(_id);
