@@ -48,7 +48,9 @@ int main() {
 	while (!window.ShouldClose()) {
 		timer.Tick();
 		const float delta = timer.GetDelta();
+		window.UpdateTitle(timer.GetFPS());
 
+		
 		processInput(window, delta);
 		window.Clear();
 

@@ -100,6 +100,12 @@ void Window::Update() const {
 
 void Window::Close() const { glfwSetWindowShouldClose(_window, true); }
 
+void Window::UpdateTitle(unsigned fps) const {
+	if (lastFps == fps) return;
+	std::string newTitle{ _title + " | " + std::to_string(fps) + "fps" };
+	glfwSetWindowTitle(_window, newTitle.c_str());
+}
+
 glm::vec2 Window::GetMousePos() const { return _mousePos; }
 
 bool Window::IsKeyPressed(int key) const { return _keys[key]; }

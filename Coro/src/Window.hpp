@@ -19,6 +19,7 @@ class Window {
     glm::vec2 _mousePos;
     bool _keys[1024] = {};  // keyboard keys
     bool _buttons[32]{};    // mouse buttons
+	mutable unsigned lastFps = 0;
 
    public:
     Coro::Callback<double, double> OnMouseMove;
@@ -44,6 +45,7 @@ class Window {
     void Clear();
     void Update() const;
     void Close() const;
+	void UpdateTitle(unsigned fps) const;
 
     bool IsKeyPressed(int key) const;  // temporary
     bool IsMouseButtonPressed(int button) const;
