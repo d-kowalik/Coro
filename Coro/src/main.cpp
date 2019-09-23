@@ -82,12 +82,6 @@ class Pixel
 private:
 	glm::vec3 _translate{};
 	glm::vec3 _scale{};
-	std::vector<glm::vec3> _positions{
-		{ -.5f, .5f, 1.f },
-		{.5f, .5f, 1.f},
-		{ .5f, -.5f, 1.f },
-		{ -.5f, -.5f, 1.f }
-	};
 
 public:
 	struct Vertex {
@@ -96,12 +90,6 @@ public:
 	
 	glm::vec3 _color{};
 	glm::mat4 _model;
-	std::vector<Vertex> _vertices{
-		{{ -.5f, .5f, 1.f }},
-		{{.5f, .5f, 1.f}},
-		{{ .5f, -.5f, 1.f }},
-		{{ -.5f, -.5f, 1.f }}
-	};
 	
 	std::vector<unsigned> _indices {
 		0, 1, 3,
@@ -123,10 +111,16 @@ public:
 
 class PixelRenderer
 {
+	glm::vec3 _vertices[4] = {
+		{ -.5f, .5f, 1.f },
+		{.5f, .5f, 1.f},
+		{ .5f, -.5f, 1.f },
+		{ -.5f, -.5f, 1.f }
+	};
 	unsigned _vao, _vbo, _ebo, _ivbo;
 	Coro::Ref<Coro::ShaderProgram> _program;
 private:
-	static const int SIZE = 3800;
+	static const int SIZE = 10000;
 
 	glm::mat4 _view;
 	glm::mat4 _projection;
@@ -137,6 +131,7 @@ private:
 		glm::vec3 color;
 		glm::mat4 model;
 	};
+	unsigned _pixelCount = 0;
 public:
 	PixelRenderer() {
 		_program = Coro::MakeRef<Coro::ShaderProgram>(std::vector<Coro::Ref<Coro::Shader>>{
@@ -162,7 +157,6 @@ public:
 			j += 4;
 		}
 		
-		
 		glGenVertexArrays(1, &_vao);
 		glGenBuffers(1, &_vbo);
 		glGenBuffers(1, &_ebo);
@@ -170,17 +164,17 @@ public:
 		
 		glBindVertexArray(_vao);
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		glBufferData(GL_ARRAY_BUFFER, SIZE * 4 * sizeof(Pixel::Vertex), NULL, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(glm::vec3), &_vertices[0], GL_STATIC_DRAW);
 		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, SIZE * 6 * sizeof(unsigned),
-			_indices, GL_DYNAMIC_DRAW);
+			_indices, GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Pixel::Vertex), static_cast<void*>(nullptr));
 		glEnableVertexAttribArray(0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, _ivbo);
-		glBufferData(GL_ARRAY_BUFFER, SIZE * sizeof(InstanceData), NULL, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, SIZE * sizeof(InstanceData), nullptr, GL_STATIC_DRAW);
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(InstanceData),
 			reinterpret_cast<void*>(0));
@@ -207,7 +201,6 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	~PixelRenderer() {
@@ -216,26 +209,28 @@ public:
 		glDeleteBuffers(1, &_ebo);
 	}
 
-	void Add(const Coro::Ref<Pixel>& pixel) {
-		glBindVertexArray(_vao);
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		glBufferSubData(GL_ARRAY_BUFFER, 4 * _pixels.size() * sizeof(Pixel::Vertex),
-			4 * sizeof(Pixel::Vertex), &pixel->_vertices[0]);
+	void Begin() const {
 		glBindBuffer(GL_ARRAY_BUFFER, _ivbo);
-		glBufferSubData(GL_ARRAY_BUFFER, _pixels.size() * sizeof(InstanceData),
-			sizeof(InstanceData::color), &pixel->_color[0]);
-		glBufferSubData(GL_ARRAY_BUFFER, (_pixels.size() * sizeof(InstanceData)) + sizeof(InstanceData::color),
-			sizeof(InstanceData::model), glm::value_ptr(pixel->_model));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 
-		_pixels.push_back(pixel);
+	void End() const {
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void Add(const Coro::Ref<Pixel>& pixel) {
+		glBufferSubData(GL_ARRAY_BUFFER, _pixelCount * sizeof(InstanceData),
+			sizeof(InstanceData::color), &pixel->_color[0]);
+		glBufferSubData(GL_ARRAY_BUFFER, (_pixelCount * sizeof(InstanceData)) + sizeof(InstanceData::color),
+			sizeof(InstanceData::model), glm::value_ptr(pixel->_model));
+		_pixelCount++;
 	}
 
 	void Draw() {
 		_program->Use();
 		glBindVertexArray(_vao);
-		glDrawElementsInstanced(GL_TRIANGLES, 6 * _pixels.size(), GL_UNSIGNED_INT, NULL, _pixels.size());
+		glDrawElementsInstanced(GL_TRIANGLES, 6 * _pixelCount, GL_UNSIGNED_INT, NULL, _pixelCount);
 		glBindVertexArray(0);
+		_pixelCount = 0;
 	}
 };
 
@@ -246,43 +241,39 @@ int main() {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> dist(0.f, 1.f);
-	const float pixelSize = 32.f;
-	for (int x = 0; x <= (float)W/pixelSize; x++) {
-		for (int y = 0; y <= (float)H/pixelSize; y++) {
-			std::cout << "Adding pixel at position (" << pixelSize * x << ", " << pixelSize * y << ")\n";
-			renderer.Add(Coro::MakeRef<Pixel>(pixelSize, pixelSize, x * pixelSize,
-				y * pixelSize, glm::vec3{ dist(gen), dist(gen), dist(gen), }));
-		}
-	}
 
 	float delta = 0.f;
 	float last = 0.f;
 	float acc = .0f;
 	int fps = 0;
 	while (!window.ShouldClose()) {
-		float current = glfwGetTime();
+		const float current = glfwGetTime();
 		delta = current - last;
 		last = current;
 		acc += delta;
 		fps += 1;
 		if (acc >= 1.0f) {
-			std::cout << fps << "fps\ncurrent "
-				<< current << "s\naverage delta " << ((acc/static_cast<float>(fps)) * 1000.f)
+			std::cout << fps 
+				<< "fps\nframetime " << ((acc/static_cast<float>(fps)) * 1000.f)
 				<< "ms\ncurrent delta " << delta * 1000.f << "ms\n\n";
 			acc = .0f;
 			fps = 0;
 		}
 
-		std::cout << delta << std::endl;
-		
 		processInput(window, delta);
 		window.Clear();
 
-		renderer.Draw();
-		for (const auto& pixel : renderer._pixels) {
-			pixel->_color = { dist(gen), dist(gen), dist(gen) };
+		renderer.Begin();
+		const float pixelSize = 12.f;
+		for (int x = 0; x <= (float)W / pixelSize; x++) {
+			for (int y = 0; y <= (float)H / pixelSize; y++) {
+				renderer.Add(Coro::MakeRef<Pixel>(pixelSize, pixelSize, x * pixelSize,
+					y * pixelSize, glm::vec3{ dist(gen), dist(gen), dist(gen), }));
+			}
 		}
-		renderer.Update();
+		renderer.End();
+		renderer.Draw();
+
 		
 		window.Update();
 	}
