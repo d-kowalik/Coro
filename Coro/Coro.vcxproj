@@ -150,6 +150,7 @@
     <ClInclude Include="src\Shader.hpp" />
     <ClInclude Include="src\ShaderProgram.hpp" />
     <ClInclude Include="src\Texture.hpp" />
+    <ClInclude Include="src\Timer.hpp" />
     <ClInclude Include="src\Window.hpp" />
   </ItemGroup>
   <ItemGroup>

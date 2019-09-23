@@ -5,6 +5,7 @@
 #include "Texture.hpp"
 #include "Window.hpp"
 #include "Core.hpp"
+#include "PixelRenderer.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -12,7 +13,7 @@
 #include <ostream>
 #include <iostream>
 #include <random>
-#include "PixelRenderer.hpp"
+#include "Timer.hpp"
 
 constexpr int W = 1280;
 constexpr int H = 720;
@@ -43,23 +44,10 @@ int main() {
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> dist(0.f, 1.f);
 
-	float delta = 0.f;
-	float last = 0.f;
-	float acc = .0f;
-	int fps = 0;
+	Coro::Timer timer;
 	while (!window.ShouldClose()) {
-		const float current = glfwGetTime();
-		delta = current - last;
-		last = current;
-		acc += delta;
-		fps += 1;
-		if (acc >= 1.0f) {
-			std::cout << fps 
-				<< "fps\nframetime " << ((acc/static_cast<float>(fps)) * 1000.f)
-				<< "ms\ncurrent delta " << delta * 1000.f << "ms\n\n";
-			acc = .0f;
-			fps = 0;
-		}
+		timer.Tick();
+		const float delta = timer.GetDelta();
 
 		processInput(window, delta);
 		window.Clear();
