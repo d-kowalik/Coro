@@ -12,6 +12,7 @@
 #include <ostream>
 #include <iostream>
 #include <random>
+#include "PixelRenderer.hpp"
 
 constexpr int W = 1280;
 constexpr int H = 720;
@@ -43,7 +44,6 @@ void MoveCamera(double xpos, double ypos) {
 };
 
 void processInput(const Coro::Window& window, float delta) {
-	const float cameraSpeed = 2.5f * delta;  // adjust accordingly
 	if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
 		window.Close();
 	}
@@ -56,187 +56,11 @@ void processInput(const Coro::Window& window, float delta) {
 	else if (window.IsKeyPressed(GLFW_KEY_3)) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 	}
-
-	if (window.IsKeyPressed(GLFW_KEY_W)) {
-		camera.ProcessInput(Coro::Camera::CameraMovement::FORWARD, delta);
-	}
-	if (window.IsKeyPressed(GLFW_KEY_S)) {
-		camera.ProcessInput(Coro::Camera::CameraMovement::BACKWARD, delta);
-	}
-	if (window.IsKeyPressed(GLFW_KEY_A)) {
-		camera.ProcessInput(Coro::Camera::CameraMovement::LEFT, delta);
-	}
-	if (window.IsKeyPressed(GLFW_KEY_D)) {
-		camera.ProcessInput(Coro::Camera::CameraMovement::RIGHT, delta);
-	}
-	if (window.IsKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-		camera.ProcessInput(Coro::Camera::CameraMovement::DOWN, delta);
-	}
-	if (window.IsKeyPressed(GLFW_KEY_SPACE)) {
-		camera.ProcessInput(Coro::Camera::CameraMovement::UP, delta);
-	}
 }
-
-class Pixel
-{
-private:
-	glm::vec3 _translate{};
-	glm::vec3 _scale{};
-
-public:
-	struct Vertex {
-		glm::vec3 position;
-	};
-	
-	glm::vec3 _color{};
-	glm::mat4 _model;
-	
-	std::vector<unsigned> _indices {
-		0, 1, 3,
-		1, 2, 3
-	};
-
-
-public:
-	Pixel(float w, float h, float x, float y, glm::vec3 const& color) {
-		_model = glm::mat4(1.0f);
-		_translate = glm::vec3{ x, y, .0f };
-		_scale = glm::vec3{ w, h, 1.0f };
-		_model = glm::translate(_model, _translate);
-		_model = glm::scale(_model, _scale);
-		_color = color;
-	
-	}
-};
-
-class PixelRenderer
-{
-	glm::vec3 _vertices[4] = {
-		{ 0.f, 1.f, 1.f },
-		{1.f, 1.f, 1.f},
-		{ 1.f, 0.f, 1.f },
-		{ 0.f, 0.f, 1.f }
-	};
-	unsigned _vao, _vbo, _ebo, _ivbo;
-	Coro::Ref<Coro::ShaderProgram> _program;
-private:
-	static const int SIZE = 10000;
-
-	glm::mat4 _view;
-	glm::mat4 _projection;
-	unsigned _indices[6*SIZE];
-
-	struct InstanceData
-	{
-		glm::vec3 color;
-		glm::mat4 model;
-	};
-	unsigned _pixelCount = 0;
-public:
-	PixelRenderer() {
-		_program = Coro::MakeRef<Coro::ShaderProgram>(std::vector<Coro::Ref<Coro::Shader>>{
-			Coro::Shader::Make("shaders/flatColor.vert", GL_VERTEX_SHADER),
-				Coro::Shader::Make("shaders/flatColor.frag", GL_FRAGMENT_SHADER)
-		});
-		_view = glm::lookAt(glm::vec3{ 0.f, 0.f, 3.f },
-			{ 0.f, 0.f, 0.f }, { 0.f, 1.f, 0.f });
-		_projection = glm::ortho(0.f, static_cast<float>(W), 
-				0.f, static_cast<float>(H), 0.1f, 100.f);
-		_program->Use();
-		_program->SetMat4("view", _view);
-		_program->SetMat4("projection", _projection);
-
-		int j = 0;
-		for (int i = 0; i < 6*SIZE; i += 6) {
-			_indices[i] = j;
-			_indices[i+1] = j+1;
-			_indices[i+2] = j+3;
-			_indices[i+3] = j+1;
-			_indices[i+4] = j+2;
-			_indices[i+5] = j+3;
-			j += 4;
-		}
-		
-		glGenVertexArrays(1, &_vao);
-		glGenBuffers(1, &_vbo);
-		glGenBuffers(1, &_ebo);
-		glGenBuffers(1, &_ivbo);
-		
-		glBindVertexArray(_vao);
-		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(glm::vec3), &_vertices[0], GL_STATIC_DRAW);
-		
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, SIZE * 6 * sizeof(unsigned),
-			_indices, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Pixel::Vertex), static_cast<void*>(nullptr));
-		glEnableVertexAttribArray(0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, _ivbo);
-		glBufferData(GL_ARRAY_BUFFER, SIZE * sizeof(InstanceData), nullptr, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(InstanceData),
-			reinterpret_cast<void*>(0));
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceData),
-			reinterpret_cast<void*>(sizeof(InstanceData::color)));
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceData),
-			reinterpret_cast<void*>(sizeof(InstanceData::color) + sizeof(glm::vec4)));
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceData),
-			reinterpret_cast<void*>(sizeof(InstanceData::color) + (2 * sizeof(glm::vec4))));
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceData),
-			reinterpret_cast<void*>(sizeof(InstanceData::color) + (3 * sizeof(glm::vec4))));
-		glEnableVertexAttribArray(5);
-		
-		glVertexAttribDivisor(1, 1);
-		glVertexAttribDivisor(2, 1);
-		glVertexAttribDivisor(3, 1);
-		glVertexAttribDivisor(4, 1);
-		glVertexAttribDivisor(5, 1);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	~PixelRenderer() {
-		glDeleteVertexArrays(1, &_vao);
-		glDeleteBuffers(1, &_vbo);
-		glDeleteBuffers(1, &_ebo);
-	}
-
-	void Begin() const {
-		glBindBuffer(GL_ARRAY_BUFFER, _ivbo);
-	}
-
-	void End() const {
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	void Add(const Coro::Ref<Pixel>& pixel) {
-		glBufferSubData(GL_ARRAY_BUFFER, _pixelCount * sizeof(InstanceData),
-			sizeof(InstanceData::color), &pixel->_color[0]);
-		glBufferSubData(GL_ARRAY_BUFFER, (_pixelCount * sizeof(InstanceData)) + sizeof(InstanceData::color),
-			sizeof(InstanceData::model), glm::value_ptr(pixel->_model));
-		_pixelCount++;
-	}
-
-	void Draw() {
-		_program->Use();
-		glBindVertexArray(_vao);
-		glDrawElementsInstanced(GL_TRIANGLES, 6 * _pixelCount, GL_UNSIGNED_INT, NULL, _pixelCount);
-		glBindVertexArray(0);
-		_pixelCount = 0;
-	}
-};
 
 int main() {
 
-	PixelRenderer renderer;
+	Coro::PixelRenderer renderer{W, H};
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -264,10 +88,10 @@ int main() {
 		window.Clear();
 
 		renderer.Begin();
-		const float pixelSize = 12.f;
-		for (int x = 0; x <= (float)W / pixelSize; x++) {
-			for (int y = 0; y <= (float)H / pixelSize; y++) {
-				renderer.Add(Coro::MakeRef<Pixel>(pixelSize, pixelSize, x * pixelSize,
+		const float pixelSize = 32.f;
+		for (int x = 0; x <= static_cast<float>(W) / pixelSize; x++) {
+			for (int y = 0; y <= static_cast<float>(H) / pixelSize; y++) {
+				renderer.Add(Coro::MakeRef<Coro::Pixel>(pixelSize, pixelSize, x * pixelSize,
 					y * pixelSize, glm::vec3{ dist(gen), dist(gen), dist(gen), }));
 			}
 		}
