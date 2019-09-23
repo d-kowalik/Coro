@@ -20,29 +20,6 @@ constexpr char TITLE[] = "Coro";
 Coro::Window window{ W, H, TITLE };
 Coro::Camera camera;
 
-float lastX = W / 2;
-float lastY = H / 2;
-
-void MoveCamera(double xpos, double ypos) {
-	static bool firstMouse = false;
-	if (!window.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
-		firstMouse = true;
-		return;
-	}
-	if (firstMouse) {
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
-
-	const float xoffset = xpos - lastX;
-	const float yoffset = lastY - ypos;
-	lastX = xpos;
-	lastY = ypos;
-
-	camera.ProcessMouseMove(xoffset, yoffset);
-};
-
 void processInput(const Coro::Window& window, float delta) {
 	if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
 		window.Close();
