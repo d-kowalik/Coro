@@ -49,7 +49,7 @@ public:
 	}
 
 	void End() const {
-		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glUnmapBuffer(GL_ARRAY_BUFFER); 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 

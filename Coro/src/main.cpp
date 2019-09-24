@@ -19,25 +19,8 @@ constexpr int W = 1280;
 constexpr int H = 720;
 constexpr char TITLE[] = "Coro";
 Coro::Window window{ W, H, TITLE };
-Coro::Camera camera;
-
-void processInput(const Coro::Window& window, float delta) {
-	if (window.IsKeyPressed(GLFW_KEY_ESCAPE)) {
-		window.Close();
-	}
-	else if (window.IsKeyPressed(GLFW_KEY_1)) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	else if (window.IsKeyPressed(GLFW_KEY_2)) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	else if (window.IsKeyPressed(GLFW_KEY_3)) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-	}
-}
 
 int main() {
-
 	Coro::PixelRenderer renderer{W, H};
 
 	std::random_device rd;
@@ -51,7 +34,6 @@ int main() {
 		window.UpdateTitle(timer.GetFPS());
 
 		
-		processInput(window, delta);
 		window.Clear();
 
 		renderer.Begin();
