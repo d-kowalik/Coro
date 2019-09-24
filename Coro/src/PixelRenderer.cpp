@@ -68,10 +68,9 @@ PixelRenderer::~PixelRenderer() {
 }
 
 void PixelRenderer::Add(const Coro::Ref<Pixel>& pixel) {
-	glBufferSubData(GL_ARRAY_BUFFER, _pixelCount * sizeof(InstanceData),
-		sizeof(InstanceData::color), &pixel->GetColor()[0]);
-	glBufferSubData(GL_ARRAY_BUFFER, (_pixelCount * sizeof(InstanceData)) + sizeof(InstanceData::color),
-		sizeof(InstanceData::model), glm::value_ptr(pixel->GetModel()));
+	_buffer->color = pixel->GetColor();
+	_buffer->model = pixel->GetModel();
+	_buffer++;
 	_pixelCount++;
 }
 

@@ -55,11 +55,12 @@ int main() {
 		window.Clear();
 
 		renderer.Begin();
-		const float pixelSize = 32.f;
+		const float pixelSize = 4.f;
 		for (int x = 0; x <= static_cast<float>(W) / pixelSize; x++) {
 			for (int y = 0; y <= static_cast<float>(H) / pixelSize; y++) {
 				renderer.Add(Coro::MakeRef<Coro::Pixel>(pixelSize, pixelSize, x * pixelSize,
-					y * pixelSize, glm::vec3{ dist(gen), dist(gen), dist(gen), }));
+					y * pixelSize, glm::vec3{ dist(gen) < .5f ? 1 : 0,
+						dist(gen) < .5f ? 1 : 0, dist(gen) < .5f ? 1 : 0 }));
 			}
 		}
 		renderer.End();

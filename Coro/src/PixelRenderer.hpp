@@ -36,17 +36,20 @@ private:
 		glm::vec3 color;
 		glm::mat4 model;
 	};
+	InstanceData* _buffer = nullptr;
 
 public:
 	PixelRenderer(int w, int h);
 	~PixelRenderer();
 
-	void Begin() const {
+	void Begin() {
 		glBindBuffer(GL_ARRAY_BUFFER, _ivbo);
+		_buffer = static_cast<InstanceData*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
 		_program->Use();
 	}
 
 	void End() const {
+		glUnmapBuffer(GL_ARRAY_BUFFER);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
