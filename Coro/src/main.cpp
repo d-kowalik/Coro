@@ -1,56 +1,47 @@
 #include "Camera.hpp"
-#include "Mesh.hpp"
-#include "Shader.hpp"
 #include "ShaderProgram.hpp"
-#include "Texture.hpp"
 #include "Window.hpp"
-#include "Core.hpp"
-#include "PixelRenderer.hpp"
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <ostream>
 #include <iostream>
 #include <random>
-#include "Timer.hpp"
+#include "Application.hpp"
 
 constexpr int W = 1280;
 constexpr int H = 720;
 constexpr char TITLE[] = "Coro";
-Coro::Window window{ W, H, TITLE };
 
-int main() {
-	Coro::PixelRenderer renderer{W, H};
+class SandboxApp : public Coro::Application
+{
+	using Application::Application;
+	
+	std::random_device _rd;
+	std::mt19937 _gen{_rd()};
+	std::uniform_real_distribution<float> _dist{ 0.f, 1.f };
 
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dist(0.f, 1.f);
-
-	Coro::Timer timer;
-	while (!window.ShouldClose()) {
-		timer.Tick();
-		const float delta = timer.GetDelta();
-		window.UpdateTitle(timer.GetFPS());
-
+	bool OnUserCreate() override {
+		return true;
+	};
+	
+	bool OnUserUpdate(float delta) override {
 		
-		window.Clear();
-
-		renderer.Begin();
-		const float pixelSize = 4.f;
+		static const float pixelSize = 4.f;
 		for (int x = 0; x <= static_cast<float>(W) / pixelSize; x++) {
 			for (int y = 0; y <= static_cast<float>(H) / pixelSize; y++) {
-				renderer.Add(Coro::MakeRef<Coro::Pixel>(pixelSize, pixelSize, x * pixelSize,
-					y * pixelSize, glm::vec3{ dist(gen) < .5f ? 1 : 0,
-						dist(gen) < .5f ? 1 : 0, dist(gen) < .5f ? 1 : 0 }));
+				DrawPixel(pixelSize, pixelSize, x * pixelSize,
+					y * pixelSize,  _dist(_gen) < .5f ? 1 : 0,
+						_dist(_gen) < .5f ? 1 : 0, _dist(_gen) < .5f ? 1 : 0 );
 			}
 		}
-		renderer.End();
-		renderer.Draw();
 
-		
-		window.Update();
-	}
+		return true;
+	};
 
+};
+
+int main() {
+	SandboxApp app{ TITLE, W, H };
+	app.Run();
+	
 	return 0;
 }
