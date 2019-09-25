@@ -145,6 +145,7 @@
     <ClInclude Include="src\Core.hpp" />
     <ClInclude Include="src\cubevertices.hpp" />
     <ClInclude Include="src\FileUtils.hpp" />
+    <ClInclude Include="src\Keycodes.hpp" />
     <ClInclude Include="src\Mesh.hpp" />
     <ClInclude Include="src\Pixel.hpp" />
     <ClInclude Include="src\PixelRenderer.hpp" />
