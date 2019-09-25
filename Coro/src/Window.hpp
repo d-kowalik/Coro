@@ -16,9 +16,6 @@ class Window {
     GLFWwindow* _window;
     int _width, _height;
     std::string _title;
-    glm::vec2 _mousePos;
-    bool _keys[1024] = {};  // keyboard keys
-    bool _buttons[32]{};    // mouse buttons
 	mutable unsigned lastFps = 0;
 
    public:
@@ -47,10 +44,7 @@ class Window {
     void Close() const;
 	void UpdateTitle(unsigned fps) const;
 
-    bool IsKeyPressed(int key) const;  // temporary
-    bool IsMouseButtonPressed(int button) const;
-
-    glm::vec2 GetMousePos() const;
+	GLFWwindow* GetNativeWindow() const { return _window; }
 
     friend void framebuffer_size_callback(GLFWwindow* window, int w, int h);
     friend void mouse_callback(GLFWwindow* window, double xpos, double ypos);

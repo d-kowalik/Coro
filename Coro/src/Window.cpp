@@ -77,14 +77,13 @@ void Window::Resize(int w, int h) {
 
 void Window::KeyPressed(int key) {
     OnKeyPressed(key);
-    _keys[key] = true;
 }
 
-void Window::KeyReleased(int key) { _keys[key] = false; }
+void Window::KeyReleased(int key) {  }
 
-void Window::ButtonPressed(int button) { _buttons[button] = true; }
+void Window::ButtonPressed(int button) { }
 
-void Window::ButtonReleased(int button) { _buttons[button] = false; }
+void Window::ButtonReleased(int button) { }
 
 bool Window::ShouldClose() { return glfwWindowShouldClose(_window); }
 
@@ -106,12 +105,6 @@ void Window::UpdateTitle(unsigned fps) const {
 	glfwSetWindowTitle(_window, newTitle.c_str());
 }
 
-glm::vec2 Window::GetMousePos() const { return _mousePos; }
-
-bool Window::IsKeyPressed(int key) const { return _keys[key]; }
-
-bool Window::IsMouseButtonPressed(int button) const { return _buttons[button]; }
-
 void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
     Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
     win->Resize(w, h);
@@ -119,8 +112,6 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     Window* win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
-    win->_mousePos.x = xpos;
-    win->_mousePos.y = ypos;
     win->OnMouseMove(xpos, ypos);
 }
 

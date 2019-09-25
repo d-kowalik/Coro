@@ -28,6 +28,8 @@ public:
 	void DrawPixel(float w, float h, float x, float y, float r, float g, float b);
 	void Run();
 
+	Window const* GetWindow() const { return _window;  }
+	
 private:
 	void PrepareDraw();
 	void Draw();
