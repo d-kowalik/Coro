@@ -2,7 +2,6 @@
 
 namespace Coro {
 
-
 class Pixel
 {
 private:

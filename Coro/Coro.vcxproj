@@ -139,34 +139,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Application.hpp" />
-    <ClInclude Include="src\Callback.hpp" />
-    <ClInclude Include="src\Camera.hpp" />
-    <ClInclude Include="src\Core.hpp" />
-    <ClInclude Include="src\cubevertices.hpp" />
-    <ClInclude Include="src\FileUtils.hpp" />
-    <ClInclude Include="src\Input.hpp" />
-    <ClInclude Include="src\Keycodes.hpp" />
-    <ClInclude Include="src\Mesh.hpp" />
-    <ClInclude Include="src\Pixel.hpp" />
-    <ClInclude Include="src\PixelRenderer.hpp" />
-    <ClInclude Include="src\Shader.hpp" />
-    <ClInclude Include="src\ShaderProgram.hpp" />
-    <ClInclude Include="src\Texture.hpp" />
-    <ClInclude Include="src\Timer.hpp" />
-    <ClInclude Include="src\Window.hpp" />
+    <ClInclude Include="src\Coro\Application.hpp" />
+    <ClInclude Include="src\Coro\Util\Callback.hpp" />
+    <ClInclude Include="src\Coro\Camera.hpp" />
+    <ClInclude Include="src\Coro\Core.hpp" />
+    <ClInclude Include="src\Coro\Util\FileUtils.hpp" />
+    <ClInclude Include="src\Coro\Input\Input.hpp" />
+    <ClInclude Include="src\Coro\Input\Keycodes.hpp" />
+    <ClInclude Include="src\Coro\Graphics\Mesh.hpp" />
+    <ClInclude Include="src\Coro\Graphics\Pixel.hpp" />
+    <ClInclude Include="src\Coro\Graphics\PixelRenderer.hpp" />
+    <ClInclude Include="src\Coro\Graphics\Shader.hpp" />
+    <ClInclude Include="src\Coro\Graphics\ShaderProgram.hpp" />
+    <ClInclude Include="src\Coro\Graphics\Texture.hpp" />
+    <ClInclude Include="src\Coro\Util\Timer.hpp" />
+    <ClInclude Include="src\Coro\Graphics\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\Coro\Application.cpp" />
+    <ClCompile Include="src\Coro\Camera.cpp" />
+    <ClCompile Include="src\Coro\Input\Input.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Mesh.cpp" />
-    <ClCompile Include="src\PixelRenderer.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\ShaderProgram.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Coro\Graphics\Mesh.cpp" />
+    <ClCompile Include="src\Coro\Graphics\PixelRenderer.cpp" />
+    <ClCompile Include="src\Coro\Graphics\Shader.cpp" />
+    <ClCompile Include="src\Coro\Graphics\ShaderProgram.cpp" />
+    <ClCompile Include="src\Coro\Graphics\Texture.cpp" />
+    <ClCompile Include="src\Coro\Graphics\Window.cpp" />
     <ClCompile Include="vendor\lib\glad\glad.c" />
     <ClCompile Include="vendor\lib\stb_image\stb_image.cpp" />
   </ItemGroup>

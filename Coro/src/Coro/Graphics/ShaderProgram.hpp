@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-#include "Core.hpp"
+#include "../Core.hpp"
 #include "Shader.hpp"
 
 namespace Coro {

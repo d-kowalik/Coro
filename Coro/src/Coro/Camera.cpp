@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#include "Window.hpp"
-
 namespace Coro {
 
 Camera::Camera() { UpdateVectors(); }

@@ -1,8 +1,7 @@
 #include <iostream>
 #include <random>
-#include "Application.hpp"
-#include "Input.hpp"
-#include "Keycodes.hpp"
+#include "Coro/Application.hpp"
+#include "Coro/Input/Input.hpp"
 
 constexpr int W = 1280;
 constexpr int H = 720;

@@ -1,6 +1,5 @@
 #include "Input.hpp"
-
-#include "Application.hpp"
+#include "../Application.hpp"
 
 namespace Coro {
 

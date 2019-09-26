@@ -7,7 +7,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Callback.hpp"
+#include "../Util/Callback.hpp"
 
 namespace Coro {
 

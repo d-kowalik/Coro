@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 
 #include <string>
-#include "Core.hpp"
+#include "../Core.hpp"
 
 namespace Coro {
 

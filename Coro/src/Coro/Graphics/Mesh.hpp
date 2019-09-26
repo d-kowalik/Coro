@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "Core.hpp"
+#include "../Core.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
 
