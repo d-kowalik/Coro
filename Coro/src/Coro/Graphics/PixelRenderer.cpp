@@ -1,12 +1,13 @@
 #include "PixelRenderer.hpp"
-
+#include "../Util/FileUtils.hpp"
 namespace Coro {
 
 PixelRenderer::PixelRenderer(int w, int h) {
 	_program = Coro::MakeRef<Coro::ShaderProgram>(std::vector<Coro::Ref<Coro::Shader>>{
-		Coro::Shader::Make("shaders/flatColor.vert", GL_VERTEX_SHADER),
-			Coro::Shader::Make("shaders/flatColor.frag", GL_FRAGMENT_SHADER)
+		Coro::Shader::Make("../Coro/shaders/flatColor.vert", GL_VERTEX_SHADER),
+			Coro::Shader::Make("../Coro/shaders/flatColor.frag", GL_FRAGMENT_SHADER)
 	});
+
 	_view = glm::lookAt(glm::vec3{ 0.f, 0.f, 3.f },
 		{ 0.f, 0.f, 0.f }, { 0.f, 1.f, 0.f });
 	_projection = glm::ortho(0.f, static_cast<float>(w),
