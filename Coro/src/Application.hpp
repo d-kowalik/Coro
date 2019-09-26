@@ -27,6 +27,7 @@ public:
 	
 	void DrawPixel(float w, float h, float x, float y, float r, float g, float b);
 	void Run();
+	void Quit();
 
 	Window const* GetWindow() const { return _window;  }
 	

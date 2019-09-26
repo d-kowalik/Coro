@@ -35,6 +35,10 @@ void Application::Run() {
 	}
 }
 
+void Application::Quit() {
+	_window->Close();
+}
+
 void Application::PrepareDraw() {
 	_renderer->Begin();
 }

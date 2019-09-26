@@ -22,7 +22,7 @@ class SandboxApp : public Coro::Application
 	
 	bool OnUserUpdate(float delta) override {
 		if (Coro::Input::IsKeyPressed(Coro::Key::ESCAPE)) {
-			std::cout << "Escape pressed!" << std::endl;
+			Quit();
 		}
 		
 		static const char _map[] = "########"
