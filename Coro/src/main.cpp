@@ -1,11 +1,8 @@
-#include "Camera.hpp"
-#include "ShaderProgram.hpp"
-#include "Window.hpp"
-
-#include <glm/glm.hpp>
 #include <iostream>
 #include <random>
 #include "Application.hpp"
+#include "Input.hpp"
+#include "Keycodes.hpp"
 
 constexpr int W = 1280;
 constexpr int H = 720;
@@ -14,9 +11,9 @@ constexpr char TITLE[] = "Coro";
 class SandboxApp : public Coro::Application
 {
 	using Application::Application;
-	
+
 	std::random_device _rd;
-	std::mt19937 _gen{_rd()};
+	std::mt19937 _gen{ _rd() };
 	std::uniform_real_distribution<float> _dist{ 0.f, 1.f };
 
 	bool OnUserCreate() override {
@@ -24,13 +21,23 @@ class SandboxApp : public Coro::Application
 	};
 	
 	bool OnUserUpdate(float delta) override {
+		if (Coro::Input::IsKeyPressed(Coro::Key::ESCAPE)) {
+			std::cout << "Escape pressed!" << std::endl;
+		}
 		
-		static const float pixelSize = 4.f;
-		for (int x = 0; x <= static_cast<float>(W) / pixelSize; x++) {
-			for (int y = 0; y <= static_cast<float>(H) / pixelSize; y++) {
-				DrawPixel(pixelSize, pixelSize, x * pixelSize,
-					y * pixelSize,  _dist(_gen) < .5f ? 1 : 0,
-						_dist(_gen) < .5f ? 1 : 0, _dist(_gen) < .5f ? 1 : 0 );
+		static const char _map[] = "########"
+			"#..##..#"
+			"#..##..#"
+			"########"
+			"#.####.#"
+			"##....##"
+			"########"
+			"########";
+		
+		static const float pixelSize = H/8.f;
+		for (int x = 0; x < 8; x++) {
+			for (int y = 0; y < 8; y++) {
+				DrawPixel(pixelSize, pixelSize, x * pixelSize, y * pixelSize, _map[8 * y + x] == '.' ? 0 : 1, .5f, .5f);
 			}
 		}
 
